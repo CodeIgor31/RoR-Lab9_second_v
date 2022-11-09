@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .bord{
+        border: 1px solid black;
+        }
+    .tab{
+        height:40%;
+        width:100%;
+        border: 1px solid black;
+        }
+</style>
+    <title>AJAX lab 9</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <style>
+        html, body {
+            height: 90%;
+        }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html;
+        charset=utf-8" />
+    <script>
+        palindroms_url = location.protocol + "//" + location.host +
+            "/palindroms/result.json"
+        function send_query() {
+            var frm = document.forms.pal_form;
+            var param_str = "?" + "num=" + frm.num.value 
+            if (param_str == "?num=" || param_str.match(/-/) != null) alert('Вводите числа >= 0');
+            var my_JSON_object = {};
+            var http_request = new XMLHttpRequest();
+            http_request.open("GET", palindroms_url + param_str, true);
+            http_request.onreadystatechange = function () {
+                var done = 4, ok = 200;
+                if (http_request.readyState == done &&
+                    http_request.status == ok) {
+                    my_JSON_object =
+                        JSON.parse(http_request.responseText);
+                    show_result(my_JSON_object);
+                }
+            };
+            http_request.send(null);
+            return false;
+        }
+        function show_result(data) {
+            var result = document.getElementById("result");
+            arr = data.value
+            result.innerHTML = ""
+            document.getElementById("counter").innerHTML = "Их количество: " + arr.length;
+            for (let i = 0; i < arr.length; i++) {
+                result.innerHTML += "<tr class = 'bord'>" + "<td class = 'bord'>" + arr[i] + "<td class = 'bord'>" + arr[i]**2 + "</tr>";
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+<h3>Задание:</h3> Найти все числа, которые сами являсь палиндромами, при возведении в квадрат, образуют палиндромы.
+<h4>Форма</h4>
+  <form name="pal_form" onsubmit="return send_query()" accept-charset="UTF-8">
+    <p><label for="query">Введите верхнюю границу диапазона [0,n]</label></p>
+    <p><input class="form-control" type="number" name="num" id="num" /></p>
+    <p><input type="submit" name="commit" value="Найти" data-disable-with="Найти" /></p>
+  </form>
+          <table class = "tab">
+            <tr class = 'bord'>
+              <th class = 'bord'>Число</th>
+              <th class = 'bord'>Квадрат числа</th>
+            </tr>
+            <tbody id="result">
+            </tbody>
+          </table>
+          <div id="counter"></div>
+    </div>
+  </div>
+</body>
+</html>
